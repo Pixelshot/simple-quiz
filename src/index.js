@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
+import { BrowserRouter, Route, withRouter } from "react-router-dom";
+import AddAuthorForm from "./AddAuthorForm";
 import registerServiceWorker from "./registerServiceWorker";
 import { shuffle, sample } from "underscore";
 // import PropTypes from 'prop-types';
@@ -62,19 +64,52 @@ function getTurnData(authors) {
   };
 }
 
-const state = {
-  turnData: getTurnData(authors),
-  highlight: ""
-};
+function resetState() {
+  return {
+    turnData: getTurnData(authors),
+    highlight: ""
+  };
+}
+
+let state = resetState();
 
 function onAnswerSelected(answer) {
   const isCorrect = state.turnData.author.books.some(book => book === answer);
   state.highlight = isCorrect ? "correct" : "wrong";
   render();
 }
+
+function shortApp() {
+  return (
+    <App
+      {...state}
+      onAnswerSelected={onAnswerSelected}
+      onContinue={() => {
+        state = resetState();
+        render();
+      }}
+    />
+  );
+}
+
+const AuthorWrapper = withRouter(({ history }) => (
+  <AddAuthorForm
+    onAddAuthor={author => {
+      authors.push(author);
+      history.push("/");
+      // using history to return the user to the main page one their new author has been submitted.
+    }}
+  />
+));
+
 function render() {
   ReactDOM.render(
-    <App {...state} onAnswerSelected={onAnswerSelected} />,
+    <BrowserRouter>
+      <React.Fragment>
+        <Route exact path="/" component={shortApp} />
+        <Route path="/add" component={AuthorWrapper} />
+      </React.Fragment>
+    </BrowserRouter>,
     document.getElementById("root")
   );
 }

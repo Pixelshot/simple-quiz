@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import "./App.css";
 import "./bootstrap.min.css";
@@ -65,9 +66,22 @@ Turn.propTypes = {
   highlight: PropTypes.string.isRequired
 };
 
-const Continue = () => {
-  return <div />;
-};
+function Continue({ show, onContinue }) {
+  return (
+    <div className="row continue">
+      {show ? (
+        <div className="col-11">
+          <button
+            className="btn btn-primary btn-lg float-right"
+            onClick={onContinue}
+          >
+            Continue
+          </button>
+        </div>
+      ) : null}
+    </div>
+  );
+}
 
 const Footer = () => {
   return (
@@ -84,7 +98,7 @@ const Footer = () => {
   );
 };
 
-function App({ turnData, highlight, onAnswerSelected }) {
+function App({ turnData, highlight, onAnswerSelected, onContinue }) {
   return (
     <div className="container-fluid">
       <Hero />
@@ -93,7 +107,11 @@ function App({ turnData, highlight, onAnswerSelected }) {
         highlight={highlight}
         onAnswerSelected={onAnswerSelected}
       />
-      <Continue />
+      <Continue show={highlight === "correct"} onContinue={onContinue} />
+      <br />
+      <p>
+        <Link to="/add">Add an author</Link>
+      </p>
       <Footer />
     </div>
   );

@@ -16,7 +16,12 @@
   background-color: #d0e3f0;
 }
 
-turn {
+.continue {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.turn {
   padding-top: 20px;
   padding-bottom: 20px;
 }
